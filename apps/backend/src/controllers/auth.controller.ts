@@ -2,20 +2,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 
+import { signUpSchema, signInSchema } from "@repo/common";
 import { generateToken } from "../utils/tokenManagment.js";
 import type { Request, Response } from "express";
 import { client } from "../utils/prisma.js";
-
-
-const signUpSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
-});
-
-const signInSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(1, "Password is required"),
-});
 
 const signUpController = asyncHandler(async(req: Request, res: Response) => {
   try {

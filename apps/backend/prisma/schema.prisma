@@ -13,20 +13,32 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {  
+model User {
   id        String   @id @default(cuid())
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   rooms     Room[]
+  chats     Chat[]
 }
 
 model Room {
   id        String   @id @default(cuid())
-  name      String
+  name      String   @unique
   ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  chats     Chat[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+model Chat {
+  id        String   @id @default(uuid())
+  message   String
+  userId    String
+  roomId    String
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
