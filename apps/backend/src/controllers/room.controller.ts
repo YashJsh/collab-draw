@@ -1,8 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { z } from "zod";
 
 import type { Request, Response } from "express";
-import { client } from "../utils/prisma";
+import { client } from "../utils/prisma.js";
 
 
 const createRoomSchema = z.object({

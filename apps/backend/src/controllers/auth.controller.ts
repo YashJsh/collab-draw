@@ -1,10 +1,10 @@
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 
-import { generateToken } from "../utils/tokenManagment";
+import { generateToken } from "../utils/tokenManagment.js";
 import type { Request, Response } from "express";
-import { client } from "../utils/prisma";
+import { client } from "../utils/prisma.js";
 
 
 const signUpSchema = z.object({

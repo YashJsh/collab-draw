@@ -1,9 +1,9 @@
-import { NextFunction } from "express";
-import { asyncHandler } from "../utils/asyncHandler";
-import { verifyToken } from "../utils/tokenManagment";
+import type { NextFunction } from "express";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { verifyToken } from "../utils/tokenManagment.js";
 
 import type { Request, Response } from "express";
-import { client } from "../utils/prisma";
+import { client } from "../utils/prisma.js";
 
 
 const middleware = asyncHandler(async(req: Request, res: Response, next: NextFunction) => {
