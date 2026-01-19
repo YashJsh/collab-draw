@@ -15,7 +15,16 @@ export type Shape =
       x: number;
       y: number;
       radius: number;
-};
+      startAngle: number,
+      endAngle : number
+  }| {
+      type: "line";
+      startX: number;
+      startY: number;
+      endX: number;
+      endY: number;
+    }
+
 
 interface CanvasStore {
   shapes: Shape[];
