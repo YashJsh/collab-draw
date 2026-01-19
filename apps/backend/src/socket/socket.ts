@@ -1,9 +1,26 @@
 import type { WebSocketServer } from "ws";
-import {wss} from "../index.js";
-import { verifyToken } from "../utils/tokenManagment.js";
 
-export function setupWebSocketHandlers(wss : WebSocketServer) {
-    wss.on("connection", (ws, request)=>{
+export type Shape =
+  | {
+      type: "rect";
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }
+  | {
+      type: "circle";
+      x: number;
+      y: number;
+      radius: number;
+    };
+
+export interface DrawData {
+  shapes: Shape[];
+}
+
+export function setupWebSocketHandlers(wss: WebSocketServer) {
+  wss.on("connection", (ws, request) => {
     // const url = request.url;
     // if (!url){
     //     return;
@@ -15,22 +32,26 @@ export function setupWebSocketHandlers(wss : WebSocketServer) {
     //     ws.close();
     //     return;
     // };
-    console.log("New client connected to WebSocket");
-    ws.on("message", (data : Buffer)=>{
-        console.log("Received:", data);
-        const dataStr = data.toString();
-        console.log(data);
-        const objectData = JSON.parse(dataStr);
-        console.log(objectData);
-        if (objectData.type === "ping"){
-            ws.send(JSON.stringify({
-                type : "pong",
-                message : "Welcome to excali-draw websocket server"
-            }));
-        }
+ 
+    ws.on("message", (data: Buffer) => {
+      const dataStr = data.toString();
+      const objectData = JSON.parse(dataStr);
+      console.log(objectData);
+      if (objectData.type === "draw") {
+        console.log("Received drawing data from client");
+        const drawData: DrawData = objectData.data;
+        // Broadcast the drawing data to all connected clients
+        wss.clients.forEach((client) => {
+          if (client !== ws && client.readyState === 1) {
+            client.send(
+              JSON.stringify({
+                type: "draw",
+                data: drawData,
+              }),
+            );
+          }
+        });
+      }
     });
-})
+  });
 }
-
-
-
